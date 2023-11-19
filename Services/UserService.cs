@@ -8,9 +8,8 @@ namespace skyhub.Services
     public interface IUserService
     {
         Task<User> CreateAsync(User user);
-        Task UpdateAsync(User user);
-        Task DeleteAsync(string id);
-        Task<User> GetByIdAsync(string id);
+        Task<User> UpdateAsync(string email, User user);
+        Task DeleteAsync(string email);
         Task<User> GetByEmailAsync(string email);
         Task<List<User>> GetAllAsync();
     }
@@ -26,23 +25,38 @@ namespace skyhub.Services
 
         public async Task<User> CreateAsync(User user)
         {
-            await _userCollection.InsertOneAsync(user);
+            var newUser = new User
+            {
+                Id = ObjectId.GenerateNewId(),
+                Name = user.Name,
+                Password = PasswordService.HashPassword(user.Password),
+                Email = user.Email,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = null,
+                Images = new List<Image>()
+                
+            };
+            await _userCollection.InsertOneAsync(newUser);
+            return newUser;
+        }
+
+        public async Task<User> UpdateAsync(string email, User user)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Email, email);
+            var update = Builders<User>.Update
+                .Set(u => u.Name, user.Name)
+                .Set(u => u.Password, PasswordService.HashPassword(user.Password))
+                .Set(u => u.Email, user.Email)
+                .Set(u => u.UpdatedAt, DateTime.Now);
+                //.Set(u => u.Images, user.Images);
+            await _userCollection.UpdateOneAsync(filter, update);
             return user;
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task DeleteAsync(string email)
         {
-            await _userCollection.ReplaceOneAsync(u => u.Id == user.Id, user);
-        }
-
-        public async Task DeleteAsync(string id)
-        {
-            await _userCollection.DeleteOneAsync(u => u.Id == ObjectId.Parse(id));
-        }
-
-        public async Task<User> GetByIdAsync(string id)
-        {
-            return await _userCollection.Find(u => u.Id == ObjectId.Parse(id)).FirstOrDefaultAsync();
+            var filter = Builders<User>.Filter.Eq(u => u.Email, email);
+            await _userCollection.DeleteOneAsync(filter);
         }
 
         public async Task<User> GetByEmailAsync(string email)

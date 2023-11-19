@@ -29,31 +29,13 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id)
-        {
-            try
-            {
-                User user = await _userService.GetByIdAsync(id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error during getting user: {ex.Message}");
-            }
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create(User user)
         {
             try
             {
-                User createdUser = await _userService.CreateAsync(user);
-                return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
+                await _userService.CreateAsync(user);
+                return CreatedAtAction(nameof(GetByEmail), new { email = user.Email }, user);
             }
             catch (Exception ex)
             {
@@ -61,18 +43,16 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, User user)
+        [HttpPut("{email}")]
+        public async Task<IActionResult> Update(string email, User user)
         {
             try
             {
-                User userToUpdate = await _userService.GetByIdAsync(id);
-                if (userToUpdate == null)
+                if (email != user.Email)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-                user.Id = userToUpdate.Id;
-                await _userService.UpdateAsync(user);
+                await _userService.UpdateAsync(email, user);
                 return NoContent();
             }
             catch (Exception ex)
@@ -81,17 +61,17 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("{email}")]
+        public async Task<IActionResult> Delete(string email)
         {
             try
             {
-                User user = await _userService.GetByIdAsync(id);
+                User user = await _userService.GetByEmailAsync(email);
                 if (user == null)
                 {
                     return NotFound();
                 }
-                await _userService.DeleteAsync(id);
+                await _userService.DeleteAsync(email);
                 return NoContent();
             }
             catch (Exception ex)
@@ -100,7 +80,7 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpGet("email/{email}")]
+        [HttpGet("/email/{email}")]
         public async Task<IActionResult> GetByEmail(string email)
         {
             try
