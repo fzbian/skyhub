@@ -16,6 +16,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.AddSingleton<MongoDBService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

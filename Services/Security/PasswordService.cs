@@ -1,4 +1,4 @@
-namespace skyhub.Services.Security
+namespace skyhub.Services
 {
     public class PasswordService
     {
