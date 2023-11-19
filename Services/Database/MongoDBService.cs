@@ -1,12 +1,12 @@
 using skyhub.Models;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace skyhub.Services
 {
     public class MongoDBService
     {
-        private readonly IMongoCollection<User> _userCollection;
-        private readonly IMongoCollection<Image> _imageCollection;
+        private readonly IMongoDatabase _database;
 
         public MongoDBService()
         {
@@ -15,21 +15,25 @@ namespace skyhub.Services
                 throw new Exception("Connection string not found");
 
             MongoClient client = new MongoClient(connectionString);
-            IMongoDatabase database = client.GetDatabase("skyhub");
-            _userCollection = database.GetCollection<User>("users");
-            _imageCollection = database.GetCollection<Image>("images");
+            _database = client.GetDatabase("skyhub");
+        }
+
+        public IMongoCollection<T> GetCollection<T>(string collectionName)
+        {
+            return _database.GetCollection<T>(collectionName);
         }
 
         public async Task<bool> PingAsync()
         {
             try
             {
-                await _userCollection.Find(user => true).FirstOrDefaultAsync();
-                return true; 
+                // Perform some operation to check if the database is accessible
+                await _database.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
+                return true;
             }
             catch (Exception)
             {
-                return false; 
+                return false;
             }
         }
     }
