@@ -6,6 +6,7 @@ namespace skyhub.Services
     public class MongoDBService
     {
         private readonly IMongoCollection<User> _userCollection;
+        private readonly IMongoCollection<Image> _imageCollection;
 
         public MongoDBService()
         {
@@ -15,7 +16,8 @@ namespace skyhub.Services
 
             MongoClient client = new MongoClient(connectionString);
             IMongoDatabase database = client.GetDatabase("skyhub");
-            _userCollection = database.GetCollection<User>("skyhub");
+            _userCollection = database.GetCollection<User>("users");
+            _imageCollection = database.GetCollection<Image>("images");
         }
 
         public async Task<bool> PingAsync()
