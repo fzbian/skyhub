@@ -62,11 +62,11 @@ Use HTTP methods (GET, POST, PUT, DELETE) to interact with the API endpoints.
 - **Method:** `POST`
 - **Endpoint:** `/api/Auth/login`
 - **Tags:** `Auth`
-- **Description:** Authenticate a user.
+- **Description:** Authenticate a user and obtain a JWT token.
 - **Request Body:**
   - `LoginModel` schema
 - **Responses:**
-  - `200 OK`: Successful authentication.
+  - `200 OK`: Successful authentication. Returns a JWT token.
 
 ## Admin Operations
 
