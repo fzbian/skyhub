@@ -13,15 +13,18 @@ namespace skyhub.Services
         Task<User> UpdateAsync(string email, User user);
         Task DeleteAsync(string email);
         Task<User?> ValidateUserAsync(string email, string password);
+        Task<List<Image>> GetAllImages();
     }
 
     public class AdminService : IAdminService
     {
         private readonly IMongoCollection<User> _userCollection;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public AdminService(MongoDBService mongoDBService)
+        public AdminService(MongoDBService mongoDBService, ICloudinaryService cloudinaryService)
         {
             _userCollection = mongoDBService.GetCollection<User>("users");
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<User> CreateAsync(User user)
@@ -81,6 +84,20 @@ namespace skyhub.Services
             }
 
             return null;
+        }
+
+        public async Task<List<Image>> GetAllImages()
+        {
+            var users = await _userCollection.Find(_ => true).ToListAsync();
+            var allImages = new List<Image>();
+            foreach (var user in users)
+            {
+                if (user?.Images != null && user.Images.Any())
+                {
+                    allImages.AddRange(user.Images);
+                }
+            }
+            return allImages;
         }
     }
 }

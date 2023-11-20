@@ -99,5 +99,19 @@ namespace skyhub.Controllers
                 return StatusCode(500, $"Error during getting user: {ex.Message}");
             }
         }
+
+        [HttpGet("GetAllImages")]
+        public async Task<IActionResult> GetAllImages()
+        {
+            try
+            {
+                List<Image> images = await _adminService.GetAllImages();
+                return Ok(images);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error during getting images: {ex.Message}");
+            }
+        }
     }
 }

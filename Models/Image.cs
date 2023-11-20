@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -8,10 +9,18 @@ namespace skyhub.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+
+        public Guid PublicId { get; set; } = Guid.NewGuid();
+
         public string Url { get; set; } = string.Empty;
-        public Guid UserId { get; set; }
-        public User User { get; set; } = null!;
+
+        public ObjectId UserId { get; set; }
+
+        [JsonIgnore]
+        public User? User { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
     }
 }
