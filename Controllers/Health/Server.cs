@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace skyhub.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Health/[controller]")]
     [ApiController]
-    public class HealthController : ControllerBase
+    public class ServerController : ControllerBase
     {
 
         [HttpGet]

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using skyhub.Models;
 using skyhub.Services;
@@ -6,6 +7,7 @@ namespace skyhub.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
@@ -15,7 +17,7 @@ namespace skyhub.Controllers
             _adminService = adminServices;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -29,7 +31,7 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("CreateUser")]
         public async Task<IActionResult> Create(User user)
         {
             try
@@ -43,7 +45,7 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpPut("{email}")]
+        [HttpPut("UpdateUser/{email}")]
         public async Task<IActionResult> Update(string email, User user)
         {
             try
@@ -61,7 +63,7 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpDelete("{email}")]
+        [HttpDelete("DeleteUser/{email}")]
         public async Task<IActionResult> Delete(string email)
         {
             try
@@ -80,7 +82,7 @@ namespace skyhub.Controllers
             }
         }
 
-        [HttpGet("/email/{email}")]
+        [HttpGet("GetUserByEmail/{email}")]
         public async Task<IActionResult> GetByEmail(string email)
         {
             try

@@ -3,13 +3,13 @@ using skyhub.Services;
 
 namespace skyhub.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Health/[controller]")]
     [ApiController]
-    public class PingDBController : ControllerBase
+    public class DatabaseController : ControllerBase
     {
         private readonly MongoDBService _mongoDBService;
 
-        public PingDBController(MongoDBService mongoDBService)
+        public DatabaseController(MongoDBService mongoDBService)
         {
             _mongoDBService = mongoDBService;
         }
@@ -23,11 +23,11 @@ namespace skyhub.Controllers
 
                 if (isDatabaseConnected)
                 {
-                    return Ok("Database is reachable");
+                    return Ok();
                 }
                 else
                 {
-                    return StatusCode(500, "Database is not reachable");
+                    return StatusCode(500);
                 }
             }
             catch (Exception ex)

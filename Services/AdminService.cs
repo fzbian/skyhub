@@ -7,11 +7,12 @@ namespace skyhub.Services
 {
     public interface IAdminService
     {
+        Task<List<User>> GetAllAsync();
+        Task<User> GetByEmailAsync(string email);
         Task<User> CreateAsync(User user);
         Task<User> UpdateAsync(string email, User user);
         Task DeleteAsync(string email);
-        Task<User> GetByEmailAsync(string email);
-        Task<List<User>> GetAllAsync();
+        Task<User?> ValidateUserAsync(string email, string password);
     }
 
     public class AdminService : IAdminService
@@ -68,6 +69,18 @@ namespace skyhub.Services
         public async Task<List<User>> GetAllAsync()
         {
             return await _userCollection.Find(u => true).ToListAsync();
+        }
+
+        public async Task<User?> ValidateUserAsync(string email, string password)
+        {
+            User? user = await GetByEmailAsync(email);
+
+            if (user != null && PasswordService.ValidatePassword(password, user.Password))
+            {
+                return user;
+            }
+
+            return null;
         }
     }
 }

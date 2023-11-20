@@ -9,7 +9,15 @@ namespace skyhub.Services
 
         public static bool ValidatePassword(string password, string hash)
         {
-            return BCrypt.Net.BCrypt.Verify(password, hash);
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, hash);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during password validation: {ex.Message}");
+                return false;
+            }
         }
     }
 }
