@@ -11,11 +11,12 @@ namespace skyhub.Services
         public MongoDBService()
         {
             string? connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
-            if (connectionString == null)
-                throw new Exception("Connection string not found");
+            string? database = Environment.GetEnvironmentVariable("MONGODB_DATABASE");
+            if (connectionString == null || database == null)
+                throw new Exception("Connection string or database name not found");
 
             MongoClient client = new MongoClient(connectionString);
-            _database = client.GetDatabase("skyhub");
+            _database = client.GetDatabase(database);
         }
 
         public IMongoCollection<T> GetCollection<T>(string collectionName)
