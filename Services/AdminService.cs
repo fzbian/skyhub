@@ -5,7 +5,7 @@ using MongoDB.Bson;
 
 namespace skyhub.Services
 {
-    public interface IUserService
+    public interface IAdminService
     {
         Task<User> CreateAsync(User user);
         Task<User> UpdateAsync(string email, User user);
@@ -14,11 +14,11 @@ namespace skyhub.Services
         Task<List<User>> GetAllAsync();
     }
 
-    public class UserService : IUserService
+    public class AdminService : IAdminService
     {
         private readonly IMongoCollection<User> _userCollection;
 
-        public UserService(MongoDBService mongoDBService)
+        public AdminService(MongoDBService mongoDBService)
         {
             _userCollection = mongoDBService.GetCollection<User>("users");
         }
@@ -48,7 +48,6 @@ namespace skyhub.Services
                 .Set(u => u.Password, PasswordService.HashPassword(user.Password))
                 .Set(u => u.Email, user.Email)
                 .Set(u => u.UpdatedAt, DateTime.Now);
-                //.Set(u => u.Images, user.Images);
             await _userCollection.UpdateOneAsync(filter, update);
             return user;
         }

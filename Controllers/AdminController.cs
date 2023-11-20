@@ -6,13 +6,13 @@ namespace skyhub.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class AdminController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAdminService _adminService;
 
-        public UserController(IUserService userServices)
+        public AdminController(IAdminService adminServices)
         {
-            _userService = userServices;
+            _adminService = adminServices;
         }
 
         [HttpGet]
@@ -20,7 +20,7 @@ namespace skyhub.Controllers
         {
             try
             {
-                List<User> users = await _userService.GetAllAsync();
+                List<User> users = await _adminService.GetAllAsync();
                 return Ok(users);
             }
             catch (Exception ex)
@@ -34,7 +34,7 @@ namespace skyhub.Controllers
         {
             try
             {
-                await _userService.CreateAsync(user);
+                await _adminService.CreateAsync(user);
                 return CreatedAtAction(nameof(GetByEmail), new { email = user.Email }, user);
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ namespace skyhub.Controllers
                 {
                     return BadRequest();
                 }
-                await _userService.UpdateAsync(email, user);
+                await _adminService.UpdateAsync(email, user);
                 return NoContent();
             }
             catch (Exception ex)
@@ -66,12 +66,12 @@ namespace skyhub.Controllers
         {
             try
             {
-                User user = await _userService.GetByEmailAsync(email);
+                User user = await _adminService.GetByEmailAsync(email);
                 if (user == null)
                 {
                     return NotFound();
                 }
-                await _userService.DeleteAsync(email);
+                await _adminService.DeleteAsync(email);
                 return NoContent();
             }
             catch (Exception ex)
@@ -85,7 +85,7 @@ namespace skyhub.Controllers
         {
             try
             {
-                User user = await _userService.GetByEmailAsync(email);
+                User user = await _adminService.GetByEmailAsync(email);
                 if (user == null)
                 {
                     return NotFound();
