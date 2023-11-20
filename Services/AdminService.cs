@@ -31,6 +31,7 @@ namespace skyhub.Services
                 Name = user.Name,
                 Password = PasswordService.HashPassword(user.Password),
                 Email = user.Email,
+                IsAdmin = user.IsAdmin,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = null,
                 Images = new List<Image>()
@@ -47,6 +48,7 @@ namespace skyhub.Services
                 .Set(u => u.Name, user.Name)
                 .Set(u => u.Password, PasswordService.HashPassword(user.Password))
                 .Set(u => u.Email, user.Email)
+                .Set(u => u.IsAdmin, user.IsAdmin)
                 .Set(u => u.UpdatedAt, DateTime.Now);
             await _userCollection.UpdateOneAsync(filter, update);
             return user;
