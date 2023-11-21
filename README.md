@@ -16,7 +16,7 @@ Backend API Monolithic image hosting and authentication built in .NET and MongoD
 
  - MongoDB
  - .NET 7.0
- - Cloudinry Account
+ - Cloudinary Account
 
 ### Installing
 
